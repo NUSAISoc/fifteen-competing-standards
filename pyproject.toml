@@ -39,10 +39,58 @@ python_files = ["test_*.py"]
 addopts = "-ra -q"
 
 [tool.ruff]
-line-length = 80
-target-version = "py310"
+target-version = "py311"
+line-length = 88
+indent-width = 4
+extend-exclude = [
+  "build",
+  "dist",
+  ".venv",
+  ".mypy_cache",
+  ".pytest_cache",
+  "**/__pycache__",
+  "docs/_build",
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
 
 [tool.ruff.lint]
-select = ["E", "F", "I"]
-ignore = []
+select = [
+  "E", "W", "F",        # core correctness
+  "I",                  # imports
+  "B",                  # bugbear
+  "UP",                 # pyupgrade
+  "SIM", "C4",          # simplifications/comprehensions
+  "A",                  # builtins shadowing
+  "RUF",                # ruff-specific
+  "N",                  # naming
+  "S",                  # security-ish
+  "T20",                # print
+  "DTZ",                # timezone-aware datetimes
+  "NPY",                # numpy-specific
+  "PERF",               # perf traps (optional)
+]
+ignore = [
+  "E501",               # let the formatter handle line length
+  "S101",               # allow assert (useful in tests; harmless in libs)
+]
 
+fixable = ["ALL"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["fcs"]
+combine-as-imports = true
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101", "T201", "N802", "N803", "N806"]
+"examples/**" = ["T201", "S101"]
+"scripts/**" = ["T201"]
+"**/__init__.py" = ["F401"] # re-export patterns
+
+# If you enable docstrings ("D"), add:
+# "tests/**" = ["D"]
+# "**/__init__.py" = ["D104"]
+# "**/_*.py" = ["D"]
